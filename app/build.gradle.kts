@@ -5,6 +5,7 @@ plugins {
     id("com.google.dagger.hilt.android") // Plugin para Hilt
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
+    //alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -65,6 +66,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.0")
+
+    //Navigation
+    implementation(libs.kotlinx.serialization.json)
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")

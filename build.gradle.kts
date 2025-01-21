@@ -7,5 +7,6 @@ plugins {
     id("com.google.devtools.ksp") version "2.0.0-1.0.23" apply false        //aqui se busca la ultima version https://github.com/google/ksp/releases
     id("com.google.dagger.hilt.android") version "2.51" apply false
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
+  //  alias(libs.plugins.kotlinx.serialization) apply false
 
 }
