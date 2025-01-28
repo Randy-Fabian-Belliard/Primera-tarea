@@ -4,8 +4,9 @@ plugins {
     id("com.google.devtools.ksp") // Plugin para KSP
     id("com.google.dagger.hilt.android") // Plugin para Hilt
     id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.kotlin.plugin.serialization")
+   // id("org.jetbrains.kotlin.plugin.serialization")
     //alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -67,13 +68,28 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.0")
 
+    implementation ("androidx.compose.ui:ui:1.0.0")
+    implementation ("androidx.compose.material3:material3:1.0.0")
+    implementation( "androidx.compose.runtime:runtime-livedata:1.0.0")
+
     //Navigation
     implementation(libs.kotlinx.serialization.json)
-    implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation(libs.androidx.navigation.compose.v285)
+
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+   // implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.0")
+    implementation ("androidx.compose.material3:material3:1.0.0") // Dependencia de Material3 (con íconos)
+    implementation ("androidx.compose.material:material-icons-extended:1.0.0") // Íconos extendidos
 
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation(libs.androidx.storage)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.activity.ktx)
     ksp("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
 

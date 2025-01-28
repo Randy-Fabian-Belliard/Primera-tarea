@@ -1,6 +1,5 @@
-package edu.ucne.composedemo.presentation.tecnicos
+package edu.ucne.composedemo.presentation.prioridades
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,24 +11,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import edu.ucne.composedemo.data.local.entities.TecnicoEntity
+import edu.ucne.composedemo.data.local.entities.PrioridadEntity
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import edu.ucne.composedemo.data.local.Dao.TecnicoDao
+import edu.ucne.composedemo.data.local.Dao.PrioridadDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 @Composable
-fun TecnicoListScreen(navController: NavController, tecnicoList: List<TecnicoEntity>, tecnicoDao: TecnicoDao) {
+fun PrioridadListScreen(navController: NavController, prioridadList: List<PrioridadEntity>, prioridadDao: PrioridadDao) {
     Column(modifier = Modifier.padding(16.dp)) {
-        // Título de la lista de técnicos
+        // Título de la lista de prioridades
         Text(
-            text = "Lista de Técnicos",
+            text = "Lista de Prioridades",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp // Cambiar el tamaño del texto
@@ -39,32 +37,28 @@ fun TecnicoListScreen(navController: NavController, tecnicoList: List<TecnicoEnt
                 .align(Alignment.CenterHorizontally) // Centrado del título
         )
 
-        // Mostrar la lista de técnicos
-        tecnicoList.forEach { tecnico ->
+        // Mostrar la lista de prioridades
+        prioridadList.forEach { prioridad ->
             Row(
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
             ) {
-                // Información del técnico
+                // Información de la prioridad
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "Nombre: ${tecnico.nombres}",
+                        text = "Nivel: ${prioridad.nivel}",
                         style = TextStyle(fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        text = "Sueldo: ${tecnico.sueldo}",
-                        style = TextStyle(fontWeight = FontWeight.Normal)
                     )
                 }
 
                 // Botón de editar
                 Button(
                     onClick = {
-                        // Navegar a la pantalla de edición, pasando el ID del técnico
-                        navController.navigate("edit_tecnico_screen/${tecnico.tecnicoId}")
+                        // Navegar a la pantalla de edición, pasando el ID de la prioridad
+                        navController.navigate("edit_prioridad_screen/${prioridad.prioridadId}")
                     },
                     modifier = Modifier.padding(end = 8.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -77,9 +71,9 @@ fun TecnicoListScreen(navController: NavController, tecnicoList: List<TecnicoEnt
                 // Botón de eliminar
                 Button(
                     onClick = {
-                        // Eliminar el técnico directamente desde el Dao
+                        // Eliminar la prioridad directamente desde el Dao
                         CoroutineScope(Dispatchers.IO).launch {
-                            tecnicoDao.deleteById(tecnico.tecnicoId ?: 0)
+                            prioridadDao.deleteById(prioridad.prioridadId ?: 0)
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -91,25 +85,17 @@ fun TecnicoListScreen(navController: NavController, tecnicoList: List<TecnicoEnt
             }
         }
 
-        // Botón para agregar un nuevo técnico
+        // Botón para agregar una nueva prioridad
         Button(
             onClick = {
-                // Navegar a la pantalla de registro de un nuevo técnico, pasando -1 como tecnicoId
-                navController.navigate("tecnico_screen/-1")
+                // Navegar a la pantalla de registro de una nueva prioridad, pasando -1 como prioridadId
+                navController.navigate("prioridad_screen/-1")
             },
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         ) {
-            Text("Agregar Técnico")
+            Text("Agregar Prioridad")
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

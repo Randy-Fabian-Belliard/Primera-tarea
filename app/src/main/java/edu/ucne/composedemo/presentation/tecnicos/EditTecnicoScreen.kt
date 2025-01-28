@@ -9,96 +9,90 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import edu.ucne.composedemo.data.local.database.TecnicoDb
-import edu.ucne.composedemo.data.local.entities.TecnicoEntity
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-
+import edu.ucne.composedemo.data.local.entities.TecnicoEntity
 
 @Composable
-fun TecnicoScreen(navController: NavController, tecnicoId: Int?) {
+fun EditTecnicoScreen(navController: NavController, tecnicoId: Int?) {
     val context = LocalContext.current
     val db = TecnicoDb.getDatabase(context)
     val tecnicoDao = db.tecnicoDao()
 
-    // Usamos remember para almacenar los estados
     val nombres = remember { mutableStateOf("") }
     val sueldo = remember { mutableStateOf("") }
 
-    if (tecnicoId != null && tecnicoId != -1) {
-        // Cargar datos del técnico si no es un nuevo técnico
-        // Aquí puedes cargar los datos del técnico de la base de datos usando tecnicoDao.find(tecnicoId)
-    }
-
     val scope = rememberCoroutineScope()
 
+    // Cargar datos del técnico si el ID es válido
+    if (tecnicoId != null && tecnicoId != -1) {
+        scope.launch {
+            val tecnico = tecnicoDao.find(tecnicoId)
+            if (tecnico != null) {
+                nombres.value = tecnico.nombres
+                sueldo.value = tecnico.sueldo?.toString() ?: ""
+            }
+        }
+    }
 
     Column(modifier = Modifier.padding(16.dp)) {
-
-        // Título de la lista de técnicos centrado
+        // Título de la pantalla
         Text(
-            text = "Registro de tecnicos",
+            text = "Editar Técnico",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp // Cambiar el tamaño del texto
+                fontSize = 24.sp
             ),
             modifier = Modifier
-                .padding(bottom = 16.dp) // Espaciado debajo del título
-                .align(Alignment.CenterHorizontally) // Centrado del título
+                .padding(bottom = 16.dp)
+                .align(Alignment.CenterHorizontally)
         )
 
+        // Campo de texto para el nombre
         OutlinedTextField(
-            value = nombres.value, // Accedemos al valor con ".value"
-            onValueChange = { nombres.value = it }, // Cambiamos el valor de nombres
+            value = nombres.value,
+            onValueChange = { nombres.value = it },
             label = { Text("Nombre del Técnico") },
             modifier = Modifier.fillMaxWidth()
         )
 
+        // Campo de texto para el sueldo
         OutlinedTextField(
-            value = sueldo.value, // Accedemos al valor con ".value"
-            onValueChange = { sueldo.value = it }, // Cambiamos el valor de sueldo
+            value = sueldo.value,
+            onValueChange = { sueldo.value = it },
             label = { Text("Sueldo del Técnico") },
             modifier = Modifier.fillMaxWidth()
         )
 
+        // Botón para guardar los cambios
         Button(
             onClick = {
                 if (nombres.value.isNotBlank() && sueldo.value.isNotBlank()) {
                     scope.launch {
-                        val tecnico = TecnicoEntity(
+                        val updatedTecnico = TecnicoEntity(
+                            tecnicoId = tecnicoId,
                             nombres = nombres.value,
                             sueldo = sueldo.value.toFloatOrNull() ?: 0f
                         )
-                        if (tecnicoId == -1) {
-                            // Si es un nuevo técnico, lo guardamos
-                            tecnicoDao.save(tecnico)
-                        } else {
-                            // Aquí podrías actualizar el técnico en la base de datos
-                        }
-                        navController.popBackStack()  // Volver a la lista
+                        tecnicoDao.save(updatedTecnico)
+                        navController.popBackStack() // Volver a la pantalla anterior
                     }
                 }
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text("Guardar Técnico")
+            Text("Guardar Cambios")
         }
     }
 }
-
-
-
-
-
-
-
 
 

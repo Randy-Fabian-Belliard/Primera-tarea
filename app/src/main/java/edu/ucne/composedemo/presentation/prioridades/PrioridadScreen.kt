@@ -1,4 +1,4 @@
-package edu.ucne.composedemo.presentation.tecnicos
+package edu.ucne.composedemo.presentation.prioridades
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import edu.ucne.composedemo.data.local.database.TecnicoDb
-import edu.ucne.composedemo.data.local.entities.TecnicoEntity
+import edu.ucne.composedemo.data.local.entities.PrioridadEntity
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -22,30 +22,27 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-
 @Composable
-fun TecnicoScreen(navController: NavController, tecnicoId: Int?) {
+fun PrioridadScreen(navController: NavController, prioridadId: Int?) {
     val context = LocalContext.current
     val db = TecnicoDb.getDatabase(context)
-    val tecnicoDao = db.tecnicoDao()
+    val prioridadDao = db.prioridadDao()
 
     // Usamos remember para almacenar los estados
-    val nombres = remember { mutableStateOf("") }
-    val sueldo = remember { mutableStateOf("") }
+    val nivel = remember { mutableStateOf("") }
 
-    if (tecnicoId != null && tecnicoId != -1) {
-        // Cargar datos del técnico si no es un nuevo técnico
-        // Aquí puedes cargar los datos del técnico de la base de datos usando tecnicoDao.find(tecnicoId)
+    if (prioridadId != null && prioridadId != -1) {
+        // Cargar datos de la prioridad si no es nueva
+        // Aquí puedes cargar los datos de la prioridad de la base de datos usando prioridadDao.find(prioridadId)
     }
 
     val scope = rememberCoroutineScope()
 
-
     Column(modifier = Modifier.padding(16.dp)) {
 
-        // Título de la lista de técnicos centrado
+        // Título de la lista de prioridades centrado
         Text(
-            text = "Registro de tecnicos",
+            text = "Registro de Prioridades",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp // Cambiar el tamaño del texto
@@ -56,32 +53,24 @@ fun TecnicoScreen(navController: NavController, tecnicoId: Int?) {
         )
 
         OutlinedTextField(
-            value = nombres.value, // Accedemos al valor con ".value"
-            onValueChange = { nombres.value = it }, // Cambiamos el valor de nombres
-            label = { Text("Nombre del Técnico") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = sueldo.value, // Accedemos al valor con ".value"
-            onValueChange = { sueldo.value = it }, // Cambiamos el valor de sueldo
-            label = { Text("Sueldo del Técnico") },
+            value = nivel.value, // Accedemos al valor con ".value"
+            onValueChange = { nivel.value = it }, // Cambiamos el valor de nivel
+            label = { Text("Nivel de Prioridad") },
             modifier = Modifier.fillMaxWidth()
         )
 
         Button(
             onClick = {
-                if (nombres.value.isNotBlank() && sueldo.value.isNotBlank()) {
+                if (nivel.value.isNotBlank()) {
                     scope.launch {
-                        val tecnico = TecnicoEntity(
-                            nombres = nombres.value,
-                            sueldo = sueldo.value.toFloatOrNull() ?: 0f
+                        val prioridad = PrioridadEntity(
+                            nivel = nivel.value
                         )
-                        if (tecnicoId == -1) {
-                            // Si es un nuevo técnico, lo guardamos
-                            tecnicoDao.save(tecnico)
+                        if (prioridadId == -1) {
+                            // Si es una nueva prioridad, la guardamos
+                            prioridadDao.save(prioridad)
                         } else {
-                            // Aquí podrías actualizar el técnico en la base de datos
+                            // Aquí podrías actualizar la prioridad en la base de datos
                         }
                         navController.popBackStack()  // Volver a la lista
                     }
@@ -89,16 +78,7 @@ fun TecnicoScreen(navController: NavController, tecnicoId: Int?) {
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text("Guardar Técnico")
+            Text("Guardar Prioridad")
         }
     }
 }
-
-
-
-
-
-
-
-
-
